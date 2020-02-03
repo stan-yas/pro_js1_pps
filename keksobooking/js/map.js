@@ -56,7 +56,38 @@ function Offer(i) {
 }
 
 var offers = [];
-for (var i = 0; i < 8; i++) {
+var i = 0;
+for (; i < 8; i++) {
   offers.push(new Offer(i));
 }
-console.log(offers);
+// console.log(offers);
+document.querySelector('.map').classList.remove('map--faded');
+var fragmentMapCard = document.querySelector('template').content;
+
+/**
+ * .map__pin creating
+ * @param {Offer} offer
+ * @param {Node} tMapPin template
+ * @return {Node}
+ */
+function createMapPin(offer, tMapPin) {
+  var SHIFT_X = -33;
+  var SHIFT_Y = -55;
+  var mapPin = tMapPin.cloneNode(true);
+  var location = offer.offer.address.split(',');
+  mapPin.style.left = (parseInt(location[0], 10) + SHIFT_X).toString() + 'px';
+  mapPin.style.top = (parseInt(location[1], 10) + SHIFT_Y).toString() + 'px';
+  var img = mapPin.querySelector('img');
+  img.src = offer.author.avatar;
+  img.alt = offer.offer.title;
+  return mapPin;
+}
+
+var tMapPin = fragmentMapCard.querySelector('.map__pin');
+var mapPinsFragment = document.createDocumentFragment();
+for (i = 0; i < offers.length; i++) {
+  mapPinsFragment.appendChild(createMapPin(offers[i], tMapPin)); // adding pins
+}
+var mapPinsBlock = document.querySelector('.map__pins');
+mapPinsBlock.appendChild(mapPinsFragment); // render pins
+
