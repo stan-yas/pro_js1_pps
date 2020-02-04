@@ -11,6 +11,7 @@ var offerTitles = [
   'Неуютное бунгало по колено в воде'
 ];
 var offerTypes = ['palace', 'flat', 'house', 'bungalo'];
+var offerTypesRus = ['Дворец', 'Квартира', 'Дом', 'Бунгало'];
 var offerCheckIns = ['12:00', '13:00', '14:00'];
 var offerFeatures = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 var offerFotos = [
@@ -18,7 +19,7 @@ var offerFotos = [
   'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
   'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
 ];
-
+// console.log(offerTypes.indexOf('flat'));
 /**
  * Getting a random integer between two values
  * @param {number} min The minimum is inclusive
@@ -39,11 +40,11 @@ function getRandomArrayValue(arr) {
 }
 
 function Offer(i) {
-  this.author = {avatar: 'img/avatars/user0' + i + '.png'};
+  this.author = {avatar: 'img/avatars/user0' + (i + 1) + '.png'};
   this.offer = {
     title: offerTitles[i],
-    address: getRandomInt(0, 601).toString() + ', ' + getRandomInt(0, 601).toString(),
-    price: getRandomInt(100, 1000001),
+    address: getRandomInt(0, 801).toString() + ', ' + getRandomInt(0, 551).toString(),
+    price: getRandomInt(1000, 1000001),
     type: getRandomArrayValue(offerTypes),
     rooms: getRandomInt(1, 6),
     guests: getRandomInt(1, 6),
@@ -71,8 +72,8 @@ var fragmentMapCard = document.querySelector('template').content;
  * @return {Node}
  */
 function createMapPin(offer, tMapPin) {
-  var SHIFT_X = -33;
-  var SHIFT_Y = -55;
+  var SHIFT_X = -33 + 260;
+  var SHIFT_Y = -55 + 160;
   var mapPin = tMapPin.cloneNode(true);
   var location = offer.offer.address.split(',');
   mapPin.style.left = (parseInt(location[0], 10) + SHIFT_X).toString() + 'px';
@@ -90,4 +91,14 @@ for (i = 0; i < offers.length; i++) {
 }
 var mapPinsBlock = document.querySelector('.map__pins');
 mapPinsBlock.appendChild(mapPinsFragment); // render pins
+var mapCard = fragmentMapCard.querySelector('.map__card').cloneNode(true);
+var offer = getRandomArrayValue(offers);
+mapCard.querySelector('.popup__title').textContent = offer.offer.title;
+mapCard.querySelector('.popup__text--address').textContent = offer.offer.address;
+mapCard.querySelector('.popup__text--price').textContent = offer.offer.price + '₽/ночь';
+mapCard.querySelector('.popup__type').textContent = offerTypesRus[offerTypes.indexOf(offer.offer.type)];
+mapCard.querySelector('.popup__text--capacity').textContent = offer.offer.rooms + ' комнаты для ' + offer.offer.guests + ' гостей';
+mapCard.querySelector('.popup__description').textContent = offer.offer.description;
+mapCard.querySelector('.popup__photos > li > img').src = offer.offer.photos;
+document.querySelector('.map > .map__filters-container').before(mapCard);
 
