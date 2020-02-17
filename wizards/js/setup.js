@@ -50,9 +50,21 @@ var wizards = [new Wizard(), new Wizard(), new Wizard(), new Wizard()];
 // console.log(wizards);
 var wizardTemplateElement = document.querySelector('template#similar-wizard-template');
 var documentFragment = document.createDocumentFragment();
-for (var wizard of wizards) {
-  documentFragment.appendChild(createWizardElementByTemplate(wizard, wizardTemplateElement));
+for (var i = 0; i < wizards.length; i++) {
+  documentFragment.appendChild(createWizardElementByTemplate(wizards[i], wizardTemplateElement));
 }
 document.querySelector('.setup-similar-list').appendChild(documentFragment);
 document.querySelector('.setup-similar').classList.remove('hidden');
+closeSetup();
 
+var openSetup = function () {
+  document.querySelector('.setup-close').addEventListener('click', closeSetup);
+  document.querySelector('.setup-open').removeEventListener('click', openSetup);
+  document.querySelector('.setup').classList.remove('hidden');
+};
+
+function closeSetup() {
+  document.querySelector('.setup-open').addEventListener('click', openSetup);
+  document.querySelector('.setup-close').removeEventListener('click', closeSetup);
+  document.querySelector('.setup').classList.add('hidden');
+}
