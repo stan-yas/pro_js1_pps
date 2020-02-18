@@ -1,6 +1,5 @@
 'use strict';
 
-document.querySelector('.setup').classList.remove('hidden');
 var names = ['Иван', 'Хуан Себастьян', 'Мария', 'Кристоф', 'Виктор', 'Юлия', 'Люпита', 'Вашингтон'];
 var surnames = ['да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'];
 var coatColors = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)',
@@ -10,20 +9,30 @@ var eyesColors = ['black', 'red', 'blue', 'yellow', 'green'];
 /**
  * Getting a random integer between two values
  * @param {number} min The minimum is inclusive
- * @param {number} max The maximum is exclusive
- * @return {*} A random integer between the specified values
+ * @param {number} max The maximum is inclusive
+ * @return {number} A random integer between the specified values
  */
 function getRandomInt(min, max) {
   // min = Math.ceil(min);
   // max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min)) + min;
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function getRandomArrayValue(arr) {
+/**
+ * Getting a random value from specified array excluding "notThatValue"
+ * @param {Array} arr
+ * @param {*} notThatValue don't return that value(optional)
+ * @return {*}
+ */
+function getRandomArrayValue(arr, notThatValue) {
   if (!arr || arr.length === 0) {
     throw Error('not array');
   }
-  return arr[getRandomInt(0, arr.length)];
+  var value;
+  do {
+    value = arr[getRandomInt(0, arr.length - 1)];
+  } while (notThatValue !== undefined && value === notThatValue);
+  return value;
 }
 
 function Wizard() {
@@ -47,24 +56,65 @@ var createWizardElementByTemplate = function (w, wte) {
 };
 
 var wizards = [new Wizard(), new Wizard(), new Wizard(), new Wizard()];
-// console.log(wizards);
 var wizardTemplateElement = document.querySelector('template#similar-wizard-template');
 var documentFragment = document.createDocumentFragment();
+
 for (var i = 0; i < wizards.length; i++) {
   documentFragment.appendChild(createWizardElementByTemplate(wizards[i], wizardTemplateElement));
 }
-document.querySelector('.setup-similar-list').appendChild(documentFragment);
-document.querySelector('.setup-similar').classList.remove('hidden');
-closeSetup();
 
-var openSetup = function () {
-  document.querySelector('.setup-close').addEventListener('click', closeSetup);
-  document.querySelector('.setup-open').removeEventListener('click', openSetup);
-  document.querySelector('.setup').classList.remove('hidden');
-};
+var setupEl = document.querySelector('.setup');
+var setupOpenEl = document.querySelector('.setup-open');
+var setupCloseEl = setupEl.querySelector('.setup-close');
+var setupFormEl = setupEl.querySelector('form.setup-wizard-form');
+
+setupEl.querySelector('.setup-similar-list').appendChild(documentFragment);
+setupEl.querySelector('.setup-similar').classList.remove('hidden');
+
+// openSetup();
+
+setupOpenEl.addEventListener('click', openSetup);
+
+setupOpenEl.addEventListener('keydown', function (evt) {
+  if (evt.key === 'Enter'/* || evt.key === 'Space'*/) {
+    openSetup();
+  }
+});
+
+setupCloseEl.addEventListener('click', closeSetup);
+
+setupCloseEl.addEventListener('keydown', function (evt) {
+  if (evt.key === 'Enter') {
+    closeSetup();
+  }
+});
+
+setupFormEl.addEventListener('submit', onFormSubmit);
+
+setupEl.querySelector('.setup-wizard .wizard-coat').addEventListener('click', function (evt) {
+  evt.target.style.fill = getRandomArrayValue(coatColors, evt.target.style.fill);
+});
+
+setupEl.querySelector('.setup-wizard .wizard-eyes').addEventListener('click', function (evt) {
+  evt.target.style.fill = getRandomArrayValue(eyesColors, evt.target.style.fill);
+});
+
+function openSetup() {
+  setupEl.classList.remove('hidden');
+  document.addEventListener('keydown', onDocumentKeyDown, true);
+}
 
 function closeSetup() {
-  document.querySelector('.setup-open').addEventListener('click', openSetup);
-  document.querySelector('.setup-close').removeEventListener('click', closeSetup);
-  document.querySelector('.setup').classList.add('hidden');
+  setupEl.classList.add('hidden');
+  document.removeEventListener('keydown', onDocumentKeyDown, true);
+}
+
+function onDocumentKeyDown(evt) {
+  if (evt.key === 'Escape' && evt.target.className !== 'setup-user-name') {
+    closeSetup();
+  }
+}
+
+function onFormSubmit(evt) {
+  debugger;
 }
