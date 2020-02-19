@@ -5,6 +5,7 @@ var surnames = ['да Марья', 'Верон', 'Мирабелла', 'Валь
 var coatColors = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)',
   'rgb(215, 210, 55)', 'rgb(0, 0, 0)'];
 var eyesColors = ['black', 'red', 'blue', 'yellow', 'green'];
+var fireballColors = ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848'];
 
 /**
  * Getting a random integer between two values
@@ -92,11 +93,21 @@ setupCloseEl.addEventListener('keydown', function (evt) {
 setupFormEl.addEventListener('submit', onFormSubmit);
 
 setupEl.querySelector('.setup-wizard .wizard-coat').addEventListener('click', function (evt) {
-  evt.target.style.fill = getRandomArrayValue(coatColors, evt.target.style.fill);
+  var newValue = getRandomArrayValue(coatColors, evt.target.style.fill);
+  evt.target.style.fill = newValue;
+  setupEl.querySelector('input[name=coat-color]').value = newValue;
 });
 
 setupEl.querySelector('.setup-wizard .wizard-eyes').addEventListener('click', function (evt) {
-  evt.target.style.fill = getRandomArrayValue(eyesColors, evt.target.style.fill);
+  var newValue = getRandomArrayValue(eyesColors, evt.target.style.fill);
+  evt.target.style.fill = newValue;
+  setupEl.querySelector('input[name=eyes-color]').value = newValue;
+});
+
+setupEl.querySelector('.setup-fireball-wrap').addEventListener('click', function (evt) {
+  var newValue = getRandomArrayValue(fireballColors, evt.currentTarget.style.backgroundColor);
+  evt.currentTarget.style.backgroundColor = newValue;
+  setupEl.querySelector('input[name=fireball-color]').value = newValue;
 });
 
 function openSetup() {
@@ -116,5 +127,6 @@ function onDocumentKeyDown(evt) {
 }
 
 function onFormSubmit(evt) {
-  debugger;
+  // debugger;
+  evt.currentTarget.action = 'https://js.dump.academy/code-and-magick';
 }
