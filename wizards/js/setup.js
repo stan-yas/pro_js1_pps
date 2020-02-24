@@ -92,23 +92,29 @@ setupCloseEl.addEventListener('keydown', function (evt) {
 
 setupFormEl.addEventListener('submit', onFormSubmit);
 
-setupEl.querySelector('.setup-wizard .wizard-coat').addEventListener('click', function (evt) {
-  var newValue = getRandomArrayValue(coatColors, evt.target.style.fill);
-  evt.target.style.fill = newValue;
-  setupEl.querySelector('input[name=coat-color]').value = newValue;
-});
+setupEl.querySelector('.setup-wizard .wizard-coat')
+  .addEventListener('click', function (evt) {
+    var oldValue = window.getComputedStyle(evt.target).fill;
+    var newValue = getRandomArrayValue(coatColors, oldValue);
+    evt.target.style.fill = newValue;
+    setupEl.querySelector('input[name=coat-color]').value = newValue;
+  });
 
-setupEl.querySelector('.setup-wizard .wizard-eyes').addEventListener('click', function (evt) {
-  var newValue = getRandomArrayValue(eyesColors, evt.target.style.fill);
-  evt.target.style.fill = newValue;
-  setupEl.querySelector('input[name=eyes-color]').value = newValue;
-});
+setupEl.querySelector('.setup-wizard .wizard-eyes')
+  .addEventListener('click', function (evt) {
+    var oldValue = window.getComputedStyle(evt.target).fill;
+    var newValue = getRandomArrayValue(eyesColors, oldValue);
+    evt.target.style.fill = newValue;
+    setupEl.querySelector('input[name=eyes-color]').value = newValue;
+  });
 
-setupEl.querySelector('.setup-fireball-wrap').addEventListener('click', function (evt) {
-  var newValue = getRandomArrayValue(fireballColors, evt.currentTarget.style.backgroundColor);
-  evt.currentTarget.style.backgroundColor = newValue;
-  setupEl.querySelector('input[name=fireball-color]').value = newValue;
-});
+setupEl.querySelector('.setup-fireball-wrap')
+  .addEventListener('click', function (evt) {
+    var oldValue = window.getComputedStyle(evt.currentTarget).backgroundColor;
+    var newValue = getRandomArrayValue(fireballColors, oldValue);
+    evt.currentTarget.style.backgroundColor = newValue;
+    setupEl.querySelector('input[name=fireball-color]').value = newValue;
+  });
 
 function openSetup() {
   setupEl.classList.remove('hidden');
@@ -127,6 +133,5 @@ function onDocumentKeyDown(evt) {
 }
 
 function onFormSubmit(evt) {
-  // debugger;
   evt.currentTarget.action = 'https://js.dump.academy/code-and-magick';
 }
