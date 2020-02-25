@@ -1,5 +1,7 @@
 'use strict';
 
+/* global util */
+
 var offerTitles = [
   'Большая уютная квартира',
   'Маленькая неуютная квартира',
@@ -33,51 +35,21 @@ window.active = false;
  */
 window.activated = false;
 
-
-/**
- * Getting a random integer between two values
- * @param {number} min The minimum is inclusive
- * @param {number} max The maximum is inclusive
- * @return {number} A random integer between the specified values
- */
-function getRandomInt(min, max) {
-  // min = Math.ceil(min);
-  // max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-/**
- * Getting a random value from specified array excluding "notThatValue"
- * @param {Array} arr
- * @param {*} [notThatValue] - don't return that value(optional)
- * @return {*}
- */
-function getRandomArrayValue(arr, notThatValue) {
-  if (!arr || arr.length === 0) {
-    throw Error('not array');
-  }
-  var value;
-  do {
-    value = arr[getRandomInt(0, arr.length - 1)];
-  } while (notThatValue !== undefined && value === notThatValue);
-  return value;
-}
-
 function Offer(i) {
   this.id = i;
   this.author = {avatar: 'img/avatars/user0' + (i + 1) + '.png'};
   this.offer = {
     title: offerTitles[i],
-    address: getRandomInt(0, 800).toString() + ', ' + getRandomInt(0, 550).toString(),
-    price: getRandomInt(1000, 1000000),
-    type: getRandomArrayValue(offerTypes),
-    rooms: getRandomInt(1, 5),
-    guests: getRandomInt(1, 5),
-    checkin: getRandomArrayValue(offerCheckIns),
-    checkout: getRandomArrayValue(offerCheckIns),
-    features: getRandomArrayValue(offerFeatures), // TODO more complex
+    address: util.getRandomInt(0, 800).toString() + ', ' + util.getRandomInt(0, 550).toString(),
+    price: util.getRandomInt(1000, 1000000),
+    type: util.getRandomArrayValue(offerTypes),
+    rooms: util.getRandomInt(1, 5),
+    guests: util.getRandomInt(1, 5),
+    checkin: util.getRandomArrayValue(offerCheckIns),
+    checkout: util.getRandomArrayValue(offerCheckIns),
+    features: util.getRandomArrayValue(offerFeatures), // TODO more complex
     description: '',
-    photos: getRandomArrayValue(offerFotos) // TODO more complex
+    photos: util.getRandomArrayValue(offerFotos) // TODO more complex
   };
 }
 
