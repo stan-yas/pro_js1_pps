@@ -4,30 +4,25 @@
 (function () {
   window.dialog = {
     element: document.querySelector('.setup'),
-    open: function () {
+    show: function () {
       dialog.element.style.left = '50%';
       dialog.element.style.top = '80px';
       dialog.element.classList.remove('hidden');
-      openElement.removeEventListener('click', dialog.open);
-      openElement.removeEventListener('keydown', function (evt) {
-        if (evt.key === 'Enter'/* || evt.key === 'Space'*/) {
-          dialog.open();
-        }
-      });
-      document.addEventListener('keydown', onDocumentKeyDown, true);
-      document.addEventListener('mousedown', onDocumentMouseDown, true);
+      openElement.removeEventListener('click', dialog.show);
+      openElement.removeEventListener('keydown', showDialogOnEnterKeyDown);
+      document.addEventListener('keydown', hideDialogOnEscapeKeyDown, true);
+      document.addEventListener('mousedown', dragDialogOnMouseDown, true);
     },
-    close: function () {
+    hide: function () {
       dialog.element.classList.add('hidden');
-      openElement.addEventListener('click', dialog.open);
-      openElement.addEventListener('keydown', function (evt) {
-        if (evt.key === 'Enter') {
-          dialog.open();
-        }
-      });
-      document.removeEventListener('keydown', onDocumentKeyDown, true);
-      document.removeEventListener('mousedown', onDocumentMouseDown, true);
+      openElement.addEventListener('click', dialog.show);
+      openElement.addEventListener('keydown', showDialogOnEnterKeyDown);
+      document.removeEventListener('keydown', hideDialogOnEscapeKeyDown, true);
+      document.removeEventListener('mousedown', dragDialogOnMouseDown, true);
     },
+    /** Flag of Dialog element dragging
+     * @type {boolean}
+     */
     dragging: false
   };
 
@@ -36,7 +31,7 @@
   var formElement = dialog.element.querySelector('form.setup-wizard-form');
   var userPicElement = formElement.querySelector('div.upload input');
 
-  dialog.close(); // init open dialog listeners
+  dialog.hide(); // init open dialog listeners
 
   // render similar wizards
   var documentFragment = document.createDocumentFragment();
@@ -47,10 +42,10 @@
   dialog.element.querySelector('.setup-similar').classList.remove('hidden');
 
   // adding event listeners
-  closeElement.addEventListener('click', dialog.close);
+  closeElement.addEventListener('click', dialog.hide);
   closeElement.addEventListener('keydown', function (evt) {
     if (evt.key === 'Enter') {
-      dialog.close();
+      dialog.hide();
     }
   });
   formElement.addEventListener('submit', function (evt) {
@@ -81,19 +76,15 @@
       dialog.element.querySelector('input[name=fireball-color]').value = newValue;
     });
 
-  function onDocumentKeyDown(evt) {
-    if (evt.key === 'Escape' && evt.target.className !== 'setup-user-name') {
-      dialog.close();
+  function showDialogOnEnterKeyDown(evt) {
+    if (evt.key === 'Enter') {
+      dialog.show();
     }
   }
 
-  function onDocumentMouseDown(evt) {
-    if (evt.target === userPicElement) {
-      mouse.x = evt.clientX;
-      mouse.y = evt.clientY;
-      document.addEventListener('mousemove', onDocumentMouseMove, true);
-      document.addEventListener('mouseup', onDocumentMouseUp, true);
-      evt.stopPropagation();
+  function hideDialogOnEscapeKeyDown(evt) {
+    if (evt.key === 'Escape' && evt.target.className !== 'setup-user-name') {
+      dialog.hide();
     }
   }
 
@@ -102,17 +93,28 @@
     y: undefined
   };
 
-  var onDocumentMouseMove = function (evt) {
+  function dragDialogOnMouseDown(evt) {
+    if (evt.target === userPicElement) {
+      mouse.x = evt.clientX;
+      mouse.y = evt.clientY;
+      document.addEventListener('mousemove', moveDialogOnMouseMove, true);
+      document.addEventListener('mouseup', dropDialogOnMouseUp, true);
+      evt.stopPropagation();
+    }
+  }
+
+  function moveDialogOnMouseMove(evt) {
     dialog.dragging = true;
     dialog.element.style.left = dialog.element.offsetLeft + (evt.clientX - mouse.x) + 'px';
     dialog.element.style.top = dialog.element.offsetTop + (evt.clientY - mouse.y) + 'px';
-    mouse.x = evt.clientX; mouse.y = evt.clientY;
+    mouse.x = evt.clientX;
+    mouse.y = evt.clientY;
     evt.stopPropagation();
-  };
+  }
 
-  var onDocumentMouseUp = function (evt) {
-    document.removeEventListener('mousemove', onDocumentMouseMove, true);
-    document.removeEventListener('mouseup', onDocumentMouseUp, true);
+  function dropDialogOnMouseUp(evt) {
+    document.removeEventListener('mousemove', moveDialogOnMouseMove, true);
+    document.removeEventListener('mouseup', dropDialogOnMouseUp, true);
     if (dialog.dragging) {
       var fileInputHandler = function (ev) {
         ev.preventDefault(); // prevent default if dialog dragged before 'mouseup' event
@@ -122,6 +124,6 @@
       dialog.dragging = false;
     }
     evt.stopPropagation();
-  };
+  }
 
 })();
