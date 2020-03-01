@@ -3,9 +3,8 @@
 /* global template */
 
 (function () {
-  window.template = {
-    main: document.querySelector('template').content,
-    pin: template.main.querySelector('.map__pin'),
-    card: template.main.querySelector('.map__card')
-  };
+  window.template = {};
+  template.main = document.querySelector('template').content;
+  template.pin = template.main.querySelector('.map__pin');
+  template.card = template.main.querySelector('.map__card');
 })();

@@ -1,54 +1,38 @@
 'use strict';
+/* global map, pin, form */
 
-/* global util */
-
-/**
- * Page status
- * @type {boolean} - true if Page is active
- */
-window.active = false;
-
-/**
- * Page already activated
- * @type {boolean}
- */
-window.activated = false;
-
-/**
- * Disable/enable form.notice__form fieldset
- * @param {boolean} [disable] - disable if true
- */
-function disableForm(disable) {
-  var fieldset = document.querySelectorAll('form.notice__form fieldset');
-  for (var j = 0; j < fieldset.length; j++) {
-    if (disable === undefined || disable === true) {
-      fieldset[j].setAttribute('disabled', '');
-    } else {
-      fieldset[j].removeAttribute('disabled');
+(function () {
+  window.map = {
+    /**
+     * Map status
+     * @type {boolean} - true if Map is active
+     */
+    active: false,
+    /**
+     * Map was already activated
+     * @type {boolean} - true if Map was activated
+     */
+    activated: false,
+    activatePage: function () {
+      if (!map.active) {
+        document.querySelector('.map').classList.remove('map--faded');
+        // document.querySelector('.notice__form').classList.remove('notice__form--disabled');
+        form.enable();
+        map.active = true;
+        if (!map.activated) {
+          map.activated = true;
+          pin.renderAll();
+        }
+      }
+    },
+    inactivatePage: function () {
+      if (map.active) {
+        document.querySelector('.map').classList.add('map--faded');
+        // document.querySelector('.notice__form').classList.add('notice__form--disabled');
+        form.disable();
+        map.active = false;
+      }
     }
-  }
-}
-
-function inactivatePage() {
-  if (window.active) {
-    document.querySelector('.map').classList.add('map--faded');
-    document.querySelector('.notice__form').classList.add('notice__form--disabled');
-    disableForm();
-    window.active = false;
-  }
-}
-
-function activatePage() {
-  if (!window.active) {
-    document.querySelector('.map').classList.remove('map--faded');
-    document.querySelector('.notice__form').classList.remove('notice__form--disabled');
-    disableForm(false);
-    window.active = true;
-    if (!window.activated) {
-      window.activated = true;
-      renderMapPins();
-    }
-  }
-}
-
-inactivatePage();
+  };
+  form.disable(); // on init
+})();

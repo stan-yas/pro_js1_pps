@@ -26,10 +26,6 @@
 
   window.offers = [];
 
-  for (var i = 0; i < 8; i++) {
-    offers.push(new Offer(i));
-  }
-
   function Offer(j) {
     this.id = j;
     this.author = {avatar: 'img/avatars/user0' + (i + 1) + '.png'};
@@ -46,5 +42,9 @@
       description: '',
       photos: util.getRandomArrayValue(offer.PHOTOS) // TODO more complex
     };
+  }
+
+  for (var i = 0; i < 8; i++) {
+    offers.push(new Offer(i));
   }
 })();
