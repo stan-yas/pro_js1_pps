@@ -1,5 +1,5 @@
 'use strict';
-/* global util, wizard, dialog */
+/* global util, wizard, backend, dialog */
 
 (function () {
   window.dialog = {
@@ -34,12 +34,30 @@
   dialog.hide(); // init open dialog listeners
 
   // render similar wizards
-  var documentFragment = document.createDocumentFragment();
-  for (var i = 0; i < 4; i++) {
-    documentFragment.appendChild(wizard.createSimilar());
-  }
-  dialog.element.querySelector('.setup-similar-list').appendChild(documentFragment);
-  dialog.element.querySelector('.setup-similar').classList.remove('hidden');
+  (function renderWizards(fromServer) {
+    var documentFragment = document.createDocumentFragment();
+    if (fromServer) {
+      // loading wizards data from server
+      backend.load(
+          function (data) {
+            console.log('wizards data loaded from server successfully');
+            for (var i = 0; i < 4; i++) {
+              documentFragment.appendChild(wizard.createSimilar(data[i]));
+            }
+            dialog.element.querySelector('.setup-similar-list').appendChild(documentFragment);
+          },
+          function (errorMsg) {
+            console.error(errorMsg);
+          });
+    } else {
+      // generate similar wizards
+      for (var i = 0; i < 4; i++) {
+        documentFragment.appendChild(wizard.createSimilar());
+      }
+      dialog.element.querySelector('.setup-similar-list').appendChild(documentFragment);
+    }
+    dialog.element.querySelector('.setup-similar').classList.remove('hidden');
+  })(true); // if true - loading wizards from server, otherwise - generate similar
 
   // adding event listeners
   closeElement.addEventListener('click', dialog.hide);
