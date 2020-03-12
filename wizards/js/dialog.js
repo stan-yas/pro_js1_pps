@@ -47,7 +47,7 @@
             dialog.element.querySelector('.setup-similar-list').appendChild(documentFragment);
           },
           function (errorMsg) {
-            console.error(errorMsg);
+            console.error(errorMsg); // TODO popup with error message
           });
     } else {
       // generate similar wizards
@@ -90,6 +90,22 @@
       evt.currentTarget.style.backgroundColor = newValue;
       dialog.element.querySelector('input[name=fireball-color]').value = newValue;
     });
+
+  formElement.addEventListener('submit', function (evt) {
+    // prepare Form data to save
+    var formData = new FormData(formElement);
+    // save Form data to server
+    backend.save(formData,
+        function (response) {
+          console.log('Данные успешно загружены на сервер');
+          dialog.hide();
+        },
+        function (errorMessage) {
+          console.error(errorMessage); // TODO popup with error message
+        }
+    );
+    evt.preventDefault();
+  });
 
   function showDialogOnEnterKeyDown(evt) {
     if (evt.key === 'Enter') {
@@ -140,29 +156,5 @@
     }
     evt.stopPropagation();
   }
-
-  formElement.addEventListener('submit', function (evt) {
-    // prepare Form data to send
-    var formData = new FormData(formElement);
-    debugger;
-    // for (var i = 0; i < formElement.elements.length; i++) {
-    //   if (formElement.elements[i].type !== 'submit') {
-    //     formData.append(formElement.elements[i].name, formElement.elements[i].value);
-    //   }
-    // }
-    // save Form data to server
-    backend.save(formData,
-        function (response) {
-          console.log('Данные успешно загружены на сервер');
-          debugger;
-        },
-        function (errorMessage) {
-          console.error(errorMessage);
-          debugger;
-        }
-    );
-    evt.preventDefault();
-    // evt.currentTarget.action = 'https://js.dump.academy/code-and-magick';
-  });
 
 })();

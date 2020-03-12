@@ -24,7 +24,6 @@
     },
     save: function (data, onLoad, onError) {
       var xhr = new XMLHttpRequest();
-      // xhr.responseType = 'json';
       xhr.timeout = 10000;
       xhr.onload = function () {
         if (xhr.status === 200) {
@@ -36,7 +35,7 @@
       xhr.onerror = function () {
         onError('Ошибка сети при сохранении волшебников');
       };
-      xhr.open('PUT', WIZARDS_SAVE_URI);
+      xhr.open('POST', WIZARDS_SAVE_URI);
       xhr.send(data);
     }
   };
