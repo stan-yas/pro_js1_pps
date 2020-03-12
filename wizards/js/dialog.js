@@ -66,9 +66,6 @@
       dialog.hide();
     }
   });
-  formElement.addEventListener('submit', function (evt) {
-    evt.currentTarget.action = 'https://js.dump.academy/code-and-magick';
-  });
 
   dialog.element.querySelector('.setup-wizard .wizard-coat')
     .addEventListener('click', function (evt) {
@@ -143,5 +140,29 @@
     }
     evt.stopPropagation();
   }
+
+  formElement.addEventListener('submit', function (evt) {
+    // prepare Form data to send
+    var formData = new FormData(formElement);
+    debugger;
+    // for (var i = 0; i < formElement.elements.length; i++) {
+    //   if (formElement.elements[i].type !== 'submit') {
+    //     formData.append(formElement.elements[i].name, formElement.elements[i].value);
+    //   }
+    // }
+    // save Form data to server
+    backend.save(formData,
+        function (response) {
+          console.log('Данные успешно загружены на сервер');
+          debugger;
+        },
+        function (errorMessage) {
+          console.error(errorMessage);
+          debugger;
+        }
+    );
+    evt.preventDefault();
+    // evt.currentTarget.action = 'https://js.dump.academy/code-and-magick';
+  });
 
 })();
