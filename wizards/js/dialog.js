@@ -1,5 +1,5 @@
 'use strict';
-/* global util, wizard, backend, dialog */
+/* global util, wizard, backend, dialog popup*/
 
 (function () {
   window.dialog = {
@@ -33,31 +33,28 @@
 
   dialog.hide(); // init open dialog listeners
 
-  // render similar wizards
-  (function renderWizards(fromServer) {
-    var documentFragment = document.createDocumentFragment();
-    if (fromServer) {
-      // loading wizards data from server
-      backend.load(
-          function (data) {
-            console.log('wizards data loaded from server successfully');
-            for (var i = 0; i < 4; i++) {
-              documentFragment.appendChild(wizard.createSimilar(data[i]));
-            }
-            dialog.element.querySelector('.setup-similar-list').appendChild(documentFragment);
-          },
-          function (errorMsg) {
-            console.error(errorMsg); // TODO popup with error message
-          });
-    } else {
-      // generate similar wizards
-      for (var i = 0; i < 4; i++) {
-        documentFragment.appendChild(wizard.createSimilar());
-      }
-      dialog.element.querySelector('.setup-similar-list').appendChild(documentFragment);
-    }
-    dialog.element.querySelector('.setup-similar').classList.remove('hidden');
-  })(true); // if true - loading wizards from server, otherwise - generate similar
+  // render wizards
+  var documentFragment = document.createDocumentFragment();
+  backend.load(
+      function (data) {
+        // loading wizards data from server
+        console.log('wizards data loaded from server successfully');
+        for (var i = 0; i < 4; i++) {
+          documentFragment.appendChild(wizard.createSimilar(data[i]));
+        }
+        dialog.element.querySelector('.setup-similar-list').appendChild(documentFragment);
+      },
+      function (errorMsg) {
+        popup.open(errorMsg, function () {
+          // generate similar wizards
+          for (var i = 0; i < 4; i++) {
+            documentFragment.appendChild(wizard.createSimilar());
+          }
+          dialog.element.querySelector('.setup-similar-list').appendChild(documentFragment);
+          console.error(errorMsg);
+        });
+      });
+  dialog.element.querySelector('.setup-similar').classList.remove('hidden');
 
   // adding event listeners
   closeElement.addEventListener('click', dialog.hide);
@@ -101,7 +98,9 @@
           dialog.hide();
         },
         function (errorMessage) {
-          console.error(errorMessage); // TODO popup with error message
+          popup.open(errorMessage, function () {
+            console.error(errorMessage);
+          });
         }
     );
     evt.preventDefault();
@@ -114,7 +113,8 @@
   }
 
   function hideDialogOnEscapeKeyDown(evt) {
-    if (evt.key === 'Escape' && evt.target.className !== 'setup-user-name') {
+    if (evt.key === 'Escape' && evt.target.className !== 'setup-user-name'
+      && evt.target.className.indexOf('setup') >= 0 /* only element containing `setup` in className*/) {
       dialog.hide();
     }
   }
