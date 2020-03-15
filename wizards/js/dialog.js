@@ -45,7 +45,7 @@
         dialog.element.querySelector('.setup-similar-list').appendChild(documentFragment);
       },
       function (errorMsg) {
-        popup.open(errorMsg, function () {
+        alert.open(errorMsg, function () {
           // generate similar wizards
           for (var i = 0; i < 4; i++) {
             documentFragment.appendChild(wizard.createSimilar());
@@ -94,11 +94,11 @@
     // save Form data to server
     backend.save(formData,
         function (response) {
-          console.log('Данные успешно загружены на сервер');
+          console.log('Данные успешно загружены на сервер:\n' + response);
           dialog.hide();
         },
         function (errorMessage) {
-          popup.open(errorMessage, function () {
+          alert.open(errorMessage, function () {
             console.error(errorMessage);
           });
         }

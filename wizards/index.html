@@ -67,7 +67,7 @@
   </div>
 </header>
 
-<div class="overlay setup hidden">
+<div class="setup hidden">
   <form class="setup-wizard-form"
         method="post"
         enctype="multipart/form-data"
@@ -165,6 +165,12 @@
                                                               width="130">Сделано в HTML Academy</a>в 2017 году</p>
 </footer>
 
+<div class="overlay hidden"></div>
+<div class="popup hidden">
+  <textarea class="popup__message" disabled rows='4'> class="popup__message">Popup message</textarea>
+  <button class="popup__button">OK</button>
+</div>
+
 <template id="similar-wizard-template" style="display: none">
   <div class="setup-similar-item">
     <div class="setup-similar-content">
@@ -199,6 +205,7 @@
   };
 </script>
 <script src="../jslib/util.js"></script>
+<script src="js/popup.js"></script>
 <script src="js/wizard.js"></script>
 <script src="js/backend.js"></script>
 <script src="js/dialog.js"></script>
