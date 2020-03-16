@@ -5,13 +5,22 @@
 (function () {
   window.card = template.card.cloneNode(true);
   card.show = function (offerID) {
+    window.card.querySelector('.popup__avatar').src = offers[offerID].author.avatar;
     window.card.querySelector('.popup__title').textContent = offers[offerID].offer.title;
     window.card.querySelector('.popup__text--address').textContent = offers[offerID].offer.address;
     window.card.querySelector('.popup__text--price').textContent = offers[offerID].offer.price + '₽/ночь';
     window.card.querySelector('.popup__type').textContent = offer.TYPES_RUS[offer.TYPES.indexOf(offers[offerID].offer.type)];
     window.card.querySelector('.popup__text--capacity').textContent = offers[offerID].offer.rooms + ' комнаты для ' + offers[offerID].offer.guests + ' гостей';
+    window.card.querySelector('.popup__text--time').textContent = 'Заезд после ' + offers[offerID].offer.checkin +
+      ', выезд до ' + offers[offerID].offer.checkout;
+    // TODO features
     window.card.querySelector('.popup__description').textContent = offers[offerID].offer.description;
-    window.card.querySelector('.popup__photos > li > img').src = offers[offerID].offer.photos;
+    var photos = offers[offerID].offer.photos;
+    if (photos !== null) {
+      window.card.querySelector('.popup__photos > li > img').src = photos;
+    } else {
+      window.card.querySelector('.popup__photos > li > img').src = '';
+    }
     window.card.classList.remove('hidden');
   };
 

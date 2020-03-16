@@ -23,7 +23,7 @@
        */
       function (arr, notThatValue) {
         if (!arr || arr.length === 0) {
-          throw Error('not array');
+          return null;
         }
         var value;
         do {
