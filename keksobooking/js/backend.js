@@ -13,11 +13,11 @@
         if (xhr.status === 200) {
           onLoad(xhr.response);
         } else {
-          onError('Произошла ошибка загрузки:' + xhr.statusText);
+          onError('Произошла ошибка загрузки данных:' + xhr.status);
         }
       };
       xhr.onerror = function () {
-        onError('Ошибка сети при загрузке');
+        onError('Ошибка сети при загрузке данных');
       };
       xhr.open('GET', LOAD_URI);
       xhr.send();
@@ -33,7 +33,7 @@
         }
       };
       xhr.onerror = function () {
-        onError('Ошибка сети при сохранении');
+        onError('Ошибка сети при сохранении данных');
       };
       xhr.open('POST', SAVE_URI);
       xhr.send(data);
