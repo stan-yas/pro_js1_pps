@@ -57,6 +57,7 @@
           for (var i = 0; i < data.length; i++) {
             offers.push(new Offer(data[i]));
           }
+          console.log('Успешно получено предложений с сервера: ' + offers.length);
         } catch (e) {
           console.error('Произошла ошибка при создании offers из даннных сервера: ' + e.toString());
           generateOffers();
@@ -74,7 +75,7 @@
     for (var i = 0; i < 8; i++) {
       offers.push(new Offer());
     }
-    console.log('Предложения сгенерированы');
+    console.log('Cгенерировано предложений: ' + offers.length);
   }
 
 })();
