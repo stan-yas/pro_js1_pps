@@ -37,7 +37,7 @@
       guests: data ? data.offer.guests : util.getRandomInt(1, 5),
       checkin: data ? data.offer.checkin : util.getRandomArrayValue(offer.CHECK_INS),
       checkout: data ? data.offer.checkout : util.getRandomArrayValue(offer.CHECK_INS),
-      features: data ? util.getRandomArrayValue(data.offer.features) :
+      features: data ? data.offer.features :
         util.getRandomArrayValue(offer.FEATURES), // TODO more complex
       description: data ? data.offer.description : '',
       photos: data ? util.getRandomArrayValue(data.offer.photos) :
