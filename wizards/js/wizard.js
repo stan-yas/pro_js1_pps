@@ -12,15 +12,22 @@
     createSimilar:
       /**
        * Creating a similar Wizard element by Wizard Template element
+       * @param {Object} [wizardData] - wizard data from server
        * @return {Node} - a similar Wizard element
        */
-      function () {
+      function (wizardData) {
         var wte = document.querySelector('template#similar-wizard-template');
         var we = wte.content.querySelector('.setup-similar-item').cloneNode(true);
-        we.querySelector('.setup-similar-label').textContent =
-          util.getRandomArrayValue(wizard.NAMES) + ' ' + util.getRandomArrayValue(wizard.SURNAMES);
-        we.querySelector('.wizard-coat').style.fill = util.getRandomArrayValue(wizard.COAT_COLORS);
-        we.querySelector('.wizard-eyes').style.fill = util.getRandomArrayValue(wizard.EYE_COLORS);
+        if (wizardData) {
+          we.querySelector('.setup-similar-label').textContent = wizardData.name;
+          we.querySelector('.wizard-coat').style.fill = wizardData.colorCoat;
+          we.querySelector('.wizard-eyes').style.fill = wizardData.colorEyes;
+        } else {
+          we.querySelector('.setup-similar-label').textContent =
+            util.getRandomArrayValue(wizard.NAMES) + ' ' + util.getRandomArrayValue(wizard.SURNAMES);
+          we.querySelector('.wizard-coat').style.fill = util.getRandomArrayValue(wizard.COAT_COLORS);
+          we.querySelector('.wizard-eyes').style.fill = util.getRandomArrayValue(wizard.EYE_COLORS);
+        }
         return we;
       }
   };

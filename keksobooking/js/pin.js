@@ -15,7 +15,8 @@
     var SHIFT_X = -33 + 260;
     var SHIFT_Y = -55 + 160;
     var p = template.pin.cloneNode(true);
-    p.setAttribute('offer_id', offer.id);
+    // p.setAttribute('offer_id', offer.id);
+    p.dataset.id = offer.id;
     var location = offer.offer.address.split(',');
     p.style.left = (parseInt(location[0], 10) + SHIFT_X).toString() + 'px';
     p.style.top = (parseInt(location[1], 10) + SHIFT_Y).toString() + 'px';
@@ -24,6 +25,7 @@
     img.alt = offer.offer.title;
     return p;
   };
+
   pin.renderAll = function () {
     // creating map__pins
     var mapPinsFragment = document.createDocumentFragment();
@@ -34,6 +36,7 @@
     var mapPinsBlock = document.querySelector('.map__pins');
     mapPinsBlock.appendChild(mapPinsFragment);
   };
+
   pin.dragHandler = function (evt) {
     if (!draggedPin) {
       draggedPin = evt.currentTarget;
@@ -43,6 +46,7 @@
     }
     evt.stopPropagation();
   };
+
   pin.moveHandler = function (evt) {
     if (draggedPin) {
       draggedPin.style.left = draggedPin.offsetLeft + (evt.clientX - mouse.x) + 'px';
@@ -51,6 +55,7 @@
       mouse.y = evt.clientY;
     }
   };
+
   pin.dropHandler = function () {
     if (draggedPin) {
       draggedPin.parentNode.removeEventListener('mousemove', pin.moveHandler, true);
@@ -60,9 +65,11 @@
       map.activatePage();
     }
   };
+
   pin.clickHandler = function (evt) {
     if (evt.target.parentElement.className === 'map__pin') {
-      card.show(evt.target.parentElement.getAttribute('offer_id'));
+      // card.show(evt.target.parentElement.getAttribute('offer_id'));
+      card.show(evt.target.parentElement.dataset.id);
     }
   };
 
