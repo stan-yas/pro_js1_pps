@@ -15,7 +15,8 @@
     var SHIFT_X = -33 + 260;
     var SHIFT_Y = -55 + 160;
     var p = template.pin.cloneNode(true);
-    p.setAttribute('offer_id', offer.id);
+    // p.setAttribute('offer_id', offer.id);
+    p.dataset.id = offer.id;
     var location = offer.offer.address.split(',');
     p.style.left = (parseInt(location[0], 10) + SHIFT_X).toString() + 'px';
     p.style.top = (parseInt(location[1], 10) + SHIFT_Y).toString() + 'px';
@@ -67,7 +68,8 @@
 
   pin.clickHandler = function (evt) {
     if (evt.target.parentElement.className === 'map__pin') {
-      card.show(evt.target.parentElement.getAttribute('offer_id'));
+      // card.show(evt.target.parentElement.getAttribute('offer_id'));
+      card.show(evt.target.parentElement.dataset.id);
     }
   };
 

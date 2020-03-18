@@ -33,6 +33,7 @@
         // successful saving form data
         function (response) {
           console.log('Данные формы сохранены успешно:\n' + response);
+          form.reset();
         },
         // unsuccessful saving form data
         function (errorMessage) {
