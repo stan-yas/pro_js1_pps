@@ -1,10 +1,11 @@
 'use strict';
-/* global util, wizard, backend, dialog*/
+/* global wizard, backend, dialog*/
 
 (function () {
   window.dialog = {
     element: document.querySelector('.setup'),
     show: function () {
+      dialog.renderWizards();
       dialog.element.style.left = '50%';
       dialog.element.style.top = '80px';
       dialog.element.classList.remove('hidden');
@@ -23,29 +24,33 @@
     /** Flag of Dialog element dragging
      * @type {boolean}
      */
-    dragging: false
+    dragging: false,
+    // render wizards
+    renderWizards: function () {
+      var setupSimilar = dialog.element.querySelector('.setup-similar');
+      var similarList = setupSimilar.querySelector('.setup-similar-list');
+      similarList.innerHTML = '';
+      var documentFragment = document.createDocumentFragment();
+      for (var i = 0; i < 4; i++) {
+        documentFragment.appendChild(wizard.all[i].render());
+      }
+      similarList.appendChild(documentFragment);
+      setupSimilar.classList.remove('hidden');
+    },
+    updateWizards: function () {
+      dialog.renderWizards();
+    }
   };
 
   var openElement = document.querySelector('.setup-open');
   var closeElement = dialog.element.querySelector('.setup-close');
   var formElement = dialog.element.querySelector('form.setup-wizard-form');
   var userPicElement = formElement.querySelector('div.upload input');
+  var eyesColors = wizard.EYE_COLORS.slice();
+  var coatColors = wizard.COAT_COLORS.slice();
+  var fireballColors = wizard.FIREBALL_COLORS.slice();
 
   dialog.hide(); // init open dialog listeners
-
-  // render wizards
-
-  (function renderWizards() {
-    var similarList = dialog.element.querySelector('.setup-similar-list');
-    similarList.innerHTML = '';
-    var documentFragment = document.createDocumentFragment();
-    for (var i = 0; i < 4; i++) {
-      documentFragment.appendChild(wizard.all[i]);
-    }
-    similarList.appendChild(documentFragment);
-    similarList.classList.remove('hidden');
-  })();
-
 
   // adding event listeners
   closeElement.addEventListener('click', dialog.hide);
@@ -57,26 +62,25 @@
 
   dialog.element.querySelector('.setup-wizard .wizard-coat')
     .addEventListener('click', function (evt) {
-      var oldValue = window.getComputedStyle(evt.target).fill;
-      var newValue = util.getRandomArrayValue(wizard.COAT_COLORS, oldValue);
-      evt.target.style.fill = newValue;
-      dialog.element.querySelector('input[name=coat-color]').value = newValue;
+      var nextColor = coatColors.shift(); coatColors.push(nextColor); // a circular shift of array
+      evt.target.style.fill = nextColor;
+      dialog.element.querySelector('input[name=coat-color]').value = nextColor;
+      dialog.updateWizards();
     });
 
   dialog.element.querySelector('.setup-wizard .wizard-eyes')
     .addEventListener('click', function (evt) {
-      var oldValue = window.getComputedStyle(evt.target).fill;
-      var newValue = util.getRandomArrayValue(wizard.EYE_COLORS, oldValue);
-      evt.target.style.fill = newValue;
-      dialog.element.querySelector('input[name=eyes-color]').value = newValue;
+      var nextColor = eyesColors.shift(); eyesColors.push(nextColor); // a circular shift of array
+      evt.target.style.fill = nextColor;
+      dialog.element.querySelector('input[name=eyes-color]').value = nextColor;
+      dialog.updateWizards();
     });
 
   dialog.element.querySelector('.setup-fireball-wrap')
     .addEventListener('click', function (evt) {
-      var oldValue = window.getComputedStyle(evt.currentTarget).backgroundColor;
-      var newValue = util.getRandomArrayValue(wizard.FIREBALL_COLORS, oldValue);
-      evt.currentTarget.style.backgroundColor = newValue;
-      dialog.element.querySelector('input[name=fireball-color]').value = newValue;
+      var nextColor = coatColors.shift(); fireballColors.push(nextColor); // a circular shift of array
+      evt.currentTarget.style.backgroundColor = nextColor;
+      dialog.element.querySelector('input[name=fireball-color]').value = nextColor;
     });
 
   formElement.addEventListener('submit', function (evt) {
