@@ -46,11 +46,10 @@
   var closeElement = dialog.element.querySelector('.setup-close');
   var formElement = dialog.element.querySelector('form.setup-wizard-form');
   var userPicElement = formElement.querySelector('div.upload input');
-  var eyesColors = wizard.EYE_COLORS.slice();
-  var coatColors = wizard.COAT_COLORS.slice();
-  var fireballColors = wizard.FIREBALL_COLORS.slice();
 
   dialog.hide(); // init open dialog listeners
+  wizard.getNextCoatColor(wizard.coatColor); // setting initial coat color of Setup Wizard
+  wizard.getNextEyeColor(wizard.eyesColor); // setting initial eyes color of Setup Wizard
 
   // adding event listeners
   closeElement.addEventListener('click', dialog.hide);
@@ -61,24 +60,26 @@
   });
 
   dialog.element.querySelector('.setup-wizard .wizard-coat')
-    .addEventListener('click', function (evt) {
-      var nextColor = coatColors.shift(); coatColors.push(nextColor); // a circular shift of array
-      evt.target.style.fill = nextColor;
+    .addEventListener('click', function () {
+      var nextColor = wizard.getNextCoatColor();
+      wizard.coatColor = nextColor;
+      // evt.target.style.fill = nextColor;
       dialog.element.querySelector('input[name=coat-color]').value = nextColor;
       dialog.updateWizards();
     });
 
   dialog.element.querySelector('.setup-wizard .wizard-eyes')
-    .addEventListener('click', function (evt) {
-      var nextColor = eyesColors.shift(); eyesColors.push(nextColor); // a circular shift of array
-      evt.target.style.fill = nextColor;
+    .addEventListener('click', function () {
+      var nextColor = wizard.getNextEyeColor();
+      wizard.eyesColor = nextColor;
+      // evt.target.style.fill = nextColor;
       dialog.element.querySelector('input[name=eyes-color]').value = nextColor;
       dialog.updateWizards();
     });
 
   dialog.element.querySelector('.setup-fireball-wrap')
     .addEventListener('click', function (evt) {
-      var nextColor = coatColors.shift(); fireballColors.push(nextColor); // a circular shift of array
+      var nextColor = wizard.getNextFireballColor();
       evt.currentTarget.style.backgroundColor = nextColor;
       dialog.element.querySelector('input[name=fireball-color]').value = nextColor;
     });

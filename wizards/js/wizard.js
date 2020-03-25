@@ -3,6 +3,9 @@
 
 (function () {
   window.wizard = {
+    element: document.querySelector('.setup-wizard'),
+    coat: document.querySelector('.setup-wizard .wizard-coat'),
+    eyes: document.querySelector('.setup-wizard .wizard-eyes'),
     all: [], // wizards collection
     NAMES: ['Иван', 'Хуан Себастьян', 'Мария', 'Кристоф', 'Виктор', 'Юлия', 'Люпита', 'Вашингтон'],
     SURNAMES: ['да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'],
@@ -10,6 +13,18 @@
       'rgb(215, 210, 55)', 'rgb(0, 0, 0)'],
     EYE_COLORS: ['black', 'red', 'blue', 'yellow', 'green'],
     FIREBALL_COLORS: ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848'],
+    get coatColor() {
+      return window.getComputedStyle(wizard.coat).fill; // wizard.coat.style.fill;
+    },
+    set coatColor(color) {
+      wizard.coat.style.fill = color;
+    },
+    get eyesColor() {
+      return window.getComputedStyle(wizard.eyes).fill; // wizard.eyes.style.fill;
+    },
+    set eyesColor(color) {
+      wizard.eyes.style.fill = color;
+    },
     load: function () {
       wizard.all = [];
       backend.load(
@@ -33,7 +48,7 @@
           }
       );
     },
-    rate: function (coatColor, eyesColor) {
+    rate: function (coatColor, eyesColor) { // TODO rate
       for (var i = 0; i < wizard.all.length; i++) {
         var w = wizard.all[i];
         w.rate = 0;
@@ -46,6 +61,23 @@
       }
     }
   };
+  var getNextColor = function (colors) {
+    var ix = -1;
+    var colorArray = colors;
+    return function () {
+      if (!colorArray || colorArray.length === 0) {
+        return undefined;
+      }
+      ix++;
+      if (ix === colorArray.length) {
+        ix = 0;
+      }
+      return colorArray[ix];
+    };
+  };
+  wizard.getNextCoatColor = getNextColor(wizard.COAT_COLORS);
+  wizard.getNextEyeColor = getNextColor(wizard.EYE_COLORS);
+  wizard.getNextFireballColor = getNextColor(wizard.FIREBALL_COLORS);
 
   function Wizard(name, coatColor, eyesColor) {
     this.rate = 0;
