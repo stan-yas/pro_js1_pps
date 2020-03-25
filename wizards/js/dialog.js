@@ -5,7 +5,7 @@
   window.dialog = {
     element: document.querySelector('.setup'),
     show: function () {
-      dialog.renderWizards();
+      dialog.updateWizards();
       dialog.element.style.left = '50%';
       dialog.element.style.top = '80px';
       dialog.element.classList.remove('hidden');
@@ -38,6 +38,7 @@
       setupSimilar.classList.remove('hidden');
     },
     updateWizards: function () {
+      wizard.all.sort(compareWizards);
       dialog.renderWizards();
     }
   };
@@ -48,8 +49,9 @@
   var userPicElement = formElement.querySelector('div.upload input');
 
   dialog.hide(); // init open dialog listeners
-  wizard.getNextCoatColor(wizard.coatColor); // setting initial coat color of Setup Wizard
-  wizard.getNextEyeColor(wizard.eyesColor); // setting initial eyes color of Setup Wizard
+  wizard.coatColor = wizard.getNextCoatColor(); // setting initial coat color of Setup Wizard
+  wizard.eyesColor = wizard.getNextEyeColor(); // setting initial eyes color of Setup Wizard
+  wizard.fireballColor = wizard.getNextFireballColor(); // setting initial fireball color of Setup Wizard
 
   // adding event listeners
   closeElement.addEventListener('click', dialog.hide);
@@ -78,9 +80,9 @@
     });
 
   dialog.element.querySelector('.setup-fireball-wrap')
-    .addEventListener('click', function (evt) {
+    .addEventListener('click', function () {
       var nextColor = wizard.getNextFireballColor();
-      evt.currentTarget.style.backgroundColor = nextColor;
+      wizard.fireballColor = nextColor;
       dialog.element.querySelector('input[name=fireball-color]').value = nextColor;
     });
 
@@ -101,6 +103,23 @@
     );
     evt.preventDefault();
   });
+
+  function compareWizards(a, b) {
+    var diff = b.rate() - a.rate();
+    if (diff === 0) {
+      if (a.name < b.name) {
+        return -1;
+      }
+      if (a.name > b.name) {
+        return 1;
+      }
+      return 0;
+    }
+    if (diff > 0) {
+      return 1;
+    }
+    return -1;
+  }
 
   function showDialogOnEnterKeyDown(evt) {
     if (evt.key === 'Enter') {

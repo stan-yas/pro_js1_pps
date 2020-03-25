@@ -2,10 +2,15 @@
 /* global util, wizard, backend, popup */
 
 (function () {
+
+  var setupWizardCoatColor;
+  var setupWizardEyesColor;
+
   window.wizard = {
     element: document.querySelector('.setup-wizard'),
     coat: document.querySelector('.setup-wizard .wizard-coat'),
     eyes: document.querySelector('.setup-wizard .wizard-eyes'),
+    fireball: document.querySelector('.setup-fireball-wrap'),
     all: [], // wizards collection
     NAMES: ['Иван', 'Хуан Себастьян', 'Мария', 'Кристоф', 'Виктор', 'Юлия', 'Люпита', 'Вашингтон'],
     SURNAMES: ['да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'],
@@ -14,16 +19,21 @@
     EYE_COLORS: ['black', 'red', 'blue', 'yellow', 'green'],
     FIREBALL_COLORS: ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848'],
     get coatColor() {
-      return window.getComputedStyle(wizard.coat).fill; // wizard.coat.style.fill;
+      return setupWizardCoatColor; // window.getComputedStyle(wizard.coat).fill;
     },
     set coatColor(color) {
+      setupWizardCoatColor = color;
       wizard.coat.style.fill = color;
     },
     get eyesColor() {
-      return window.getComputedStyle(wizard.eyes).fill; // wizard.eyes.style.fill;
+      return setupWizardEyesColor; // window.getComputedStyle(wizard.eyes).fill;
     },
     set eyesColor(color) {
+      setupWizardEyesColor = color;
       wizard.eyes.style.fill = color;
+    },
+    set fireballColor(color) {
+      wizard.fireball.style.backgroundColor = color;
     },
     load: function () {
       wizard.all = [];
@@ -47,18 +57,6 @@
             });
           }
       );
-    },
-    rate: function (coatColor, eyesColor) { // TODO rate
-      for (var i = 0; i < wizard.all.length; i++) {
-        var w = wizard.all[i];
-        w.rate = 0;
-        if (w.coatColor === coatColor) {
-          w.rate += 2;
-        }
-        if (w.eyesColor === eyesColor) {
-          w.rate += 1;
-        }
-      }
     }
   };
   var getNextColor = function (colors) {
@@ -80,7 +78,6 @@
   wizard.getNextFireballColor = getNextColor(wizard.FIREBALL_COLORS);
 
   function Wizard(name, coatColor, eyesColor) {
-    this.rate = 0;
     if (!arguments[0]) {
       this.name = util.getRandomArrayValue(wizard.NAMES) + ' ' + util.getRandomArrayValue(wizard.SURNAMES);
     } else {
@@ -111,6 +108,17 @@
     return we;
   };
 
-  wizard.load();
+  Wizard.prototype.rate = function () {
+    var rate = 0;
+    if (this.coatColor === wizard.coatColor) {
+      rate += 4;
+    }
+    if (this.eyesColor === wizard.eyesColor) {
+      rate += 2;
+    }
+    return rate;
+  };
+
+  wizard.load(); // initial loading wizards data
 
 })();

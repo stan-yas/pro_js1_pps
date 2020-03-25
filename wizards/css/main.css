@@ -879,7 +879,7 @@ input[type=radio]:checked + .review-mark-label {
   background-color: rgba(0,0,0,0.8);
 }
 
-.popup {
+.alert {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -899,7 +899,7 @@ input[type=radio]:checked + .review-mark-label {
   box-shadow: 0 0 20px;
 }
 
-.popup__message {
+.alert__message {
   align-self: stretch;
   font-size: 18px;
   color: inherit;
@@ -908,7 +908,7 @@ input[type=radio]:checked + .review-mark-label {
   overflow: hidden;
 }
 
-.popup__button {
+.alert__button {
   background-color: lightgray;
   border: 1px solid red;
   color: red;
