@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var WIZARDS_LOAD_URI = 'https://js.dump.academy/code-and-magick/data_';
+  var WIZARDS_LOAD_URI = 'https://js.dump.academy/code-and-magick/data';
   var WIZARDS_SAVE_URI = 'https://js.dump.academy/code-and-magick';
 
   window.backend = {

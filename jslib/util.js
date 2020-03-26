@@ -30,6 +30,26 @@
           value = arr[this.getRandomInt(0, arr.length - 1)];
         } while (notThatValue !== undefined && value === notThatValue);
         return value;
+      },
+    debounce:
+    /**
+     * Функция вызова другой функции с временной задержкой
+     * Повторный вызов сбрасывает таймер предыдущего вызова
+     * @param {CallableFunction}
+     * @param {Number} - debounce timeout interval in milliseconds
+     * @return {Function} - Closure
+     */
+    function (fun, interval) {
+      var lastTimeout;
+      return function () {
+        var args = arguments;
+        if (lastTimeout) {
+          window.clearTimeout(lastTimeout);
+        }
+        lastTimeout = window.setTimeout(function () {
+          fun.apply(null, args)
+        }, interval);
       }
+    }
   };
 })();
