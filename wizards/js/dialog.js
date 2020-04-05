@@ -43,7 +43,7 @@
     }
   };
 
-  var debounceUpdateWizards = util.debounce(dialog.updateWizards, 500);
+  var debounceUpdateWizards = util.debounce(dialog.updateWizards);
   var openElement = document.querySelector('.setup-open');
   var closeElement = dialog.element.querySelector('.setup-close');
   var formElement = dialog.element.querySelector('form.setup-wizard-form');
@@ -68,7 +68,7 @@
       wizard.coatColor = nextColor;
       // evt.target.style.fill = nextColor;
       dialog.element.querySelector('input[name=coat-color]').value = nextColor;
-      debounceUpdateWizards(); // dialog.updateWizards();
+      debounceUpdateWizards(500); // dialog.updateWizards();
     });
 
   dialog.element.querySelector('.setup-wizard .wizard-eyes')
@@ -77,7 +77,7 @@
       wizard.eyesColor = nextColor;
       // evt.target.style.fill = nextColor;
       dialog.element.querySelector('input[name=eyes-color]').value = nextColor;
-      debounceUpdateWizards(); // dialog.updateWizards();
+      debounceUpdateWizards(500); // dialog.updateWizards();
     });
 
   dialog.element.querySelector('.setup-fireball-wrap')

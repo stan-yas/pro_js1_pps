@@ -18,7 +18,7 @@
     for (var i = 0; i < featuresElements.length; i++) {
       var featureFound = false;
       for (var y = 0; y < offers[offerID].offer.features.length; y++) {
-        if (featuresElements[i].className.indexOf(offers[offerID].offer.features[y]) >= 0) {
+        if (featuresElements[i].className.indexOf('feature--' + offers[offerID].offer.features[y]) >= 0) {
           featureFound = true;
           break;
         }

@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var LOAD_URI = 'https://js.dump.academy/keksobooking/data';
+  var LOAD_URI = 'data.json'; // 'https://js.dump.academy/keksobooking/data';
   var SAVE_URI = 'https://js.dump.academy/keksobooking';
 
   window.backend = {

@@ -59,23 +59,10 @@
       );
     }
   };
-  var getNextColor = function (colors) {
-    var ix = -1;
-    var colorArray = colors;
-    return function () {
-      if (!colorArray || colorArray.length === 0) {
-        return undefined;
-      }
-      ix++;
-      if (ix === colorArray.length) {
-        ix = 0;
-      }
-      return colorArray[ix];
-    };
-  };
-  wizard.getNextCoatColor = getNextColor(wizard.COAT_COLORS);
-  wizard.getNextEyeColor = getNextColor(wizard.EYE_COLORS);
-  wizard.getNextFireballColor = getNextColor(wizard.FIREBALL_COLORS);
+
+  wizard.getNextCoatColor = util.nextArrayElement(wizard.COAT_COLORS);
+  wizard.getNextEyeColor = util.nextArrayElement(wizard.EYE_COLORS);
+  wizard.getNextFireballColor = util.nextArrayElement(wizard.FIREBALL_COLORS);
 
   function Wizard(name, coatColor, eyesColor) {
     if (!arguments[0]) {
