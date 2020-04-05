@@ -13,7 +13,7 @@
         if (xhr.status === 200) {
           onLoad(xhr.response);
         } else {
-          onError('Произошла ошибка загрузки волшебников:' + xhr.statusText);
+          onError('Произошла ошибка загрузки волшебников:\n' + xhr.statusText);
         }
       };
       xhr.onerror = function () {

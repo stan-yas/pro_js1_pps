@@ -1,10 +1,11 @@
 'use strict';
-/* global util, wizard, backend, dialog popup*/
+/* global wizard, backend, dialog, util*/
 
 (function () {
   window.dialog = {
     element: document.querySelector('.setup'),
     show: function () {
+      dialog.updateWizards();
       dialog.element.style.left = '50%';
       dialog.element.style.top = '80px';
       dialog.element.classList.remove('hidden');
@@ -23,38 +24,35 @@
     /** Flag of Dialog element dragging
      * @type {boolean}
      */
-    dragging: false
+    dragging: false,
+    // render wizards
+    renderWizards: function () {
+      var setupSimilar = dialog.element.querySelector('.setup-similar');
+      var similarList = setupSimilar.querySelector('.setup-similar-list');
+      similarList.innerHTML = '';
+      var documentFragment = document.createDocumentFragment();
+      for (var i = 0; i < 4; i++) {
+        documentFragment.appendChild(wizard.all[i].render());
+      }
+      similarList.appendChild(documentFragment);
+      setupSimilar.classList.remove('hidden');
+    },
+    updateWizards: function () {
+      wizard.all.sort(compareWizards);
+      dialog.renderWizards();
+    }
   };
 
+  var debounceUpdateWizards = util.debounce(dialog.updateWizards);
   var openElement = document.querySelector('.setup-open');
   var closeElement = dialog.element.querySelector('.setup-close');
   var formElement = dialog.element.querySelector('form.setup-wizard-form');
   var userPicElement = formElement.querySelector('div.upload input');
 
   dialog.hide(); // init open dialog listeners
-
-  // render wizards
-  var documentFragment = document.createDocumentFragment();
-  backend.load(
-      function (data) {
-        // loading wizards data from server
-        console.log('wizards data loaded from server successfully');
-        for (var i = 0; i < 4; i++) {
-          documentFragment.appendChild(wizard.createSimilar(data[i]));
-        }
-        dialog.element.querySelector('.setup-similar-list').appendChild(documentFragment);
-      },
-      function (errorMsg) {
-        alert.open(errorMsg, function () {
-          // generate similar wizards
-          for (var i = 0; i < 4; i++) {
-            documentFragment.appendChild(wizard.createSimilar());
-          }
-          dialog.element.querySelector('.setup-similar-list').appendChild(documentFragment);
-          console.error(errorMsg);
-        });
-      });
-  dialog.element.querySelector('.setup-similar').classList.remove('hidden');
+  wizard.coatColor = wizard.getNextCoatColor(); // setting initial coat color of Setup Wizard
+  wizard.eyesColor = wizard.getNextEyeColor(); // setting initial eyes color of Setup Wizard
+  wizard.fireballColor = wizard.getNextFireballColor(); // setting initial fireball color of Setup Wizard
 
   // adding event listeners
   closeElement.addEventListener('click', dialog.hide);
@@ -65,27 +63,28 @@
   });
 
   dialog.element.querySelector('.setup-wizard .wizard-coat')
-    .addEventListener('click', function (evt) {
-      var oldValue = window.getComputedStyle(evt.target).fill;
-      var newValue = util.getRandomArrayValue(wizard.COAT_COLORS, oldValue);
-      evt.target.style.fill = newValue;
-      dialog.element.querySelector('input[name=coat-color]').value = newValue;
+    .addEventListener('click', function () {
+      var nextColor = wizard.getNextCoatColor();
+      wizard.coatColor = nextColor;
+      // evt.target.style.fill = nextColor;
+      dialog.element.querySelector('input[name=coat-color]').value = nextColor;
+      debounceUpdateWizards(500); // dialog.updateWizards();
     });
 
   dialog.element.querySelector('.setup-wizard .wizard-eyes')
-    .addEventListener('click', function (evt) {
-      var oldValue = window.getComputedStyle(evt.target).fill;
-      var newValue = util.getRandomArrayValue(wizard.EYE_COLORS, oldValue);
-      evt.target.style.fill = newValue;
-      dialog.element.querySelector('input[name=eyes-color]').value = newValue;
+    .addEventListener('click', function () {
+      var nextColor = wizard.getNextEyeColor();
+      wizard.eyesColor = nextColor;
+      // evt.target.style.fill = nextColor;
+      dialog.element.querySelector('input[name=eyes-color]').value = nextColor;
+      debounceUpdateWizards(500); // dialog.updateWizards();
     });
 
   dialog.element.querySelector('.setup-fireball-wrap')
-    .addEventListener('click', function (evt) {
-      var oldValue = window.getComputedStyle(evt.currentTarget).backgroundColor;
-      var newValue = util.getRandomArrayValue(wizard.FIREBALL_COLORS, oldValue);
-      evt.currentTarget.style.backgroundColor = newValue;
-      dialog.element.querySelector('input[name=fireball-color]').value = newValue;
+    .addEventListener('click', function () {
+      var nextColor = wizard.getNextFireballColor();
+      wizard.fireballColor = nextColor;
+      dialog.element.querySelector('input[name=fireball-color]').value = nextColor;
     });
 
   formElement.addEventListener('submit', function (evt) {
@@ -105,6 +104,23 @@
     );
     evt.preventDefault();
   });
+
+  function compareWizards(a, b) {
+    var diff = b.rate() - a.rate();
+    if (diff === 0) {
+      if (a.name < b.name) {
+        return -1;
+      }
+      if (a.name > b.name) {
+        return 1;
+      }
+      return 0;
+    }
+    if (diff > 0) {
+      return 1;
+    }
+    return -1;
+  }
 
   function showDialogOnEnterKeyDown(evt) {
     if (evt.key === 'Enter') {

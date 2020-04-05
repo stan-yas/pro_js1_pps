@@ -1,5 +1,5 @@
 'use strict';
-/* global template, offers, card, pin, form, map */
+/* global template, card, pin, form, map */
 
 (function () {
   var mouse = {
@@ -12,8 +12,8 @@
   pin.container = document.querySelector('.map__pins');
   pin.main = pin.container.querySelector('.map__pin--main');
   pin.create = function (offer) {
-    var SHIFT_X = -33 + 260;
-    var SHIFT_Y = -55 + 160;
+    var SHIFT_X = -33/* + 260 */;
+    var SHIFT_Y = -55/* + 160 */;
     var p = template.pin.cloneNode(true);
     // p.setAttribute('offer_id', offer.id);
     p.dataset.id = offer.id;
@@ -24,17 +24,6 @@
     img.src = offer.author.avatar;
     img.alt = offer.offer.title;
     return p;
-  };
-
-  pin.renderAll = function () {
-    // creating map__pins
-    var mapPinsFragment = document.createDocumentFragment();
-    for (var i = 0; i < offers.length; i++) {
-      mapPinsFragment.appendChild(pin.create(offers[i]));
-    }
-    // render map__pins
-    var mapPinsBlock = document.querySelector('.map__pins');
-    mapPinsBlock.appendChild(mapPinsFragment);
   };
 
   pin.dragHandler = function (evt) {

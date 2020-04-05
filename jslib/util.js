@@ -30,6 +30,40 @@
           value = arr[this.getRandomInt(0, arr.length - 1)];
         } while (notThatValue !== undefined && value === notThatValue);
         return value;
+      },
+    nextArrayElement: function (array) {
+      var ix = -1;
+      var arr = array;
+      return function () {
+        if (!arr || arr.length === 0) {
+          return undefined;
+        }
+        ix++;
+        if (ix === arr.length) {
+          ix = 0;
+        }
+        return arr[ix];
+      };
+    },
+    debounce:
+    /**
+     * Функция вызова другой функции с временной задержкой
+     * Повторный вызов сбрасывает таймер предыдущего вызова
+     * @param {CallableFunction}
+     * @param {Number} - debounce timeout interval in milliseconds
+     * @return {Function} - Closure
+     */
+    function (fun) {
+      var lastTimeout;
+      return function (interval) {
+        var args = arguments;
+        if (lastTimeout) {
+          window.clearTimeout(lastTimeout);
+        }
+        lastTimeout = window.setTimeout(function () {
+          fun.apply(null, args)
+        }, interval);
       }
+    }
   };
 })();
