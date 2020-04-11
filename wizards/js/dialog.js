@@ -173,4 +173,22 @@
     evt.stopPropagation();
   }
 
+  // dialog user picture processing
+  var FILE_TYPES = ['.gif', '.jpg', '.jpeg', '.png'];
+  var fileChooser = dialog.element.querySelector('.upload input[type=file]');
+  var userPic = dialog.element.querySelector('.upload .setup-user-pic');
+  fileChooser.addEventListener('change', function () {
+    var file = fileChooser.files[0];
+    var match = FILE_TYPES.some(function (value) {
+      return file.name.toLowerCase().endsWith(value);
+    });
+    if (match) {
+      var reader = new FileReader();
+      reader.addEventListener('load', function () {
+        userPic.src = reader.result;
+      });
+      reader.readAsDataURL(file);
+    }
+  });
+
 })();
