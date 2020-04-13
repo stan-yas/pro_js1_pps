@@ -44,4 +44,46 @@
     );
     evt.preventDefault();
   });
+
+  // avatar picture processing
+  var FILE_TYPES = ['.gif', '.jpg', '.jpeg', '.png'];
+  var avatarChooser = form.querySelector('input#avatar');
+  var avatar = form.querySelector('.notice__preview img');
+  avatarChooser.addEventListener('change', function () {
+    var file = avatarChooser.files[0];
+    var match = FILE_TYPES.some(function (value) {
+      return file.name.toLowerCase().endsWith(value);
+    });
+    if (match) {
+      var reader = new FileReader();
+      reader.addEventListener('load', function () {
+        avatar.src = reader.result;
+      });
+      reader.readAsDataURL(file);
+    }
+  });
+
+  // photo processing
+  form.photoContainer = form.querySelector('.form__photo-container');
+  var photoChooser = form.photoContainer.querySelector('input#images');
+  photoChooser.addEventListener('change', function () {
+    for (var i = 0; i < photoChooser.files.length; i++) {
+      filePhotoProcessing(photoChooser.files[i]);
+    }
+  });
+
+  function filePhotoProcessing(file) {
+    var match = FILE_TYPES.some(function (value) {
+      return file.name.toLowerCase().endsWith(value);
+    });
+    if (match) {
+      var reader = new FileReader();
+      reader.addEventListener('load', function () {
+        // avatar.src = reader.result;
+        console.log('filename = ' + file.name);
+      });
+      reader.readAsDataURL(file);
+    }
+  }
+
 })();
