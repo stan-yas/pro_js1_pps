@@ -1,9 +1,12 @@
 'use strict';
-/* global form, backend, popup */
+/* global form, backend, popup, template */
 
 (function () {
   window.form = document.querySelector('form.notice__form');
   form.fieldset = form.querySelectorAll('fieldset');
+  form.photoContainer = form.querySelector('.form__photo-container');
+  form.photoUpload = form.photoContainer.querySelector('.upload');
+  // form.photos = form.querySelector('.form__photos');
   form.enable = function () {
     form.classList.remove('notice__form--disabled');
     for (var j = 0; j < form.fieldset.length; j++) {
@@ -27,7 +30,6 @@
     form.querySelector('input#address').value = x + ', ' + y;
   };
 
-  // form.submitButton = form.querySelector('form__submit');
   form.addEventListener('submit', function (evt) {
     backend.save(new FormData(form),
         // successful saving form data
@@ -44,6 +46,11 @@
     );
     evt.preventDefault();
   });
+
+  form.addEventListener('reset', function () {
+    deletePhotos();
+  });
+
 
   // avatar picture processing
   var FILE_TYPES = ['.gif', '.jpg', '.jpeg', '.png'];
@@ -64,10 +71,12 @@
   });
 
   // photo processing
-  form.photoContainer = form.querySelector('.form__photo-container');
-  var photoChooser = form.photoContainer.querySelector('input#images');
+  var photoChooser = form.querySelector('.form__photo-container input#images');
+
   photoChooser.addEventListener('change', function () {
-    for (var i = 0; i < photoChooser.files.length; i++) {
+    deletePhotos(); // delete old photos
+    var len = photoChooser.files.length > 4 ? 4 : photoChooser.files.length; // no more 4 photos
+    for (var i = 0; i < len; i++) {
       filePhotoProcessing(photoChooser.files[i]);
     }
   });
@@ -79,11 +88,52 @@
     if (match) {
       var reader = new FileReader();
       reader.addEventListener('load', function () {
-        // avatar.src = reader.result;
-        console.log('filename = ' + file.name);
+        var photo = template.photo.cloneNode(true);
+        photo.src = reader.result;
+        form.photoUpload.before(photo);
       });
       reader.readAsDataURL(file);
     }
   }
+
+  function deletePhotos() {
+    form.querySelectorAll('.form__photo-container .form__photo').forEach(function (photo) {
+      photo.remove();
+    });
+  }
+
+  // drag-n-drop photos in photoContainer
+  var draggedPhoto;
+
+  form.photoContainer.addEventListener('dragstart', function (evt) {
+    draggedPhoto = evt.target;
+  }, false);
+
+  form.photoContainer.addEventListener('dragover', function (evt) {
+    // prevent default to allow drop
+    evt.preventDefault();
+  }, false);
+
+  form.photoContainer.addEventListener('dragenter', function (evt) {
+    // highlight potential drop target when the draggable element enters it
+    if (evt.target.className === 'form__photo') {
+      evt.target.style.opacity = 0.5;
+    }
+  }, false);
+
+  form.photoContainer.addEventListener('dragleave', function (evt) {
+    // reset potential drop target when the draggable element leaves it
+    if (evt.target.className === 'form__photo') {
+      evt.target.style.opacity = 1;
+    }
+  }, false);
+
+  form.photoContainer.addEventListener('drop', function (evt) {
+    evt.preventDefault();
+    if (evt.target.className === 'form__photo') {
+      evt.target.before(draggedPhoto);
+      evt.target.style.opacity = 1;
+    }
+  }, false);
 
 })();
