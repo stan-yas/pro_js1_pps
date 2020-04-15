@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var WIZARDS_LOAD_URI = 'https://js.dump.academy/code-and-magick/data';
+  var WIZARDS_LOAD_URI = 'https://javascript.pages.academy/code-and-magick/data';
   var WIZARDS_SAVE_URI = 'https://js.dump.academy/code-and-magick';
 
   window.backend = {
@@ -13,7 +13,7 @@
         if (xhr.status === 200) {
           onLoad(xhr.response);
         } else {
-          onError('Произошла ошибка загрузки волшебников:\n' + xhr.statusText);
+          onError('Произошла ошибка загрузки волшебников:\n' + xhr.statusText + '(' + xhr.status + ')');
         }
       };
       xhr.onerror = function () {

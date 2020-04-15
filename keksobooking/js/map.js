@@ -43,7 +43,11 @@
       }
       // rendering map__pins
       var mapPinsBlock = document.querySelector('.map__pins');
-      mapPinsBlock.innerHTML = ''; // delete previous rendered pins
+      // delete previous rendered pins
+      // mapPinsBlock.innerHTML = '';
+      pin.container.querySelectorAll('.map__pin:not(.map__pin--main)').forEach(function (pin) {
+        pin.remove();
+      });
       mapPinsBlock.appendChild(mapPinsFragment);
     },
     filter: document.querySelectorAll('form.map__filters .map__filter'),

@@ -604,7 +604,8 @@ textarea:focus {
 }
 
 .form__photo-container {
-  width: 140px;
+  /*width: 140px;*/
+  width: 200px;
 }
 
 .form__element--submit {
@@ -623,6 +624,11 @@ textarea:focus {
   font: 14px Roboto, sans-serif;
 }
 
+.form__photo {
+  border: solid 1px #cccccc;
+  border-radius: 10px;
+  margin: 0 10px 10px 0;
+}
 
 .footer {
   box-sizing: border-box;
